@@ -6,6 +6,7 @@ const REQUIRED_HEADERS = [
   "X-Frame-Options",
   "Content-Security-Policy",
   "Strict-Transport-Security",
+  "Referrer-Policy",
 ];
 
 describe("secureHeaders", () => {
@@ -18,6 +19,14 @@ describe("secureHeaders", () => {
     }
     expect(res.headers.get("X-Content-Type-Options")).toBe("nosniff");
     expect(res.headers.get("X-Frame-Options")).toBe("DENY");
+    expect(res.headers.get("Referrer-Policy")).toBe("strict-origin-when-cross-origin");
+    expect(res.headers.get("Permissions-Policy")).toBeNull();
+  });
+
+  it("only sets Permissions-Policy when explicitly configured", async () => {
+    const mw = secureHeaders({ permissionsPolicy: "geolocation=(), camera=()" });
+    const res = await mw(async () => new Response(null, { status: 200 }))(new Request("http://x"));
+    expect(res.headers.get("Permissions-Policy")).toBe("geolocation=(), camera=()");
   });
 
   it("lets a custom CSP override the default", async () => {

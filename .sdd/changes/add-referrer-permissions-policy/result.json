@@ -1,0 +1,51 @@
+{
+  "status": "completed",
+  "executive_summary": "Added Referrer-Policy/Permissions-Policy to secureHeaders",
+  "artifacts": [
+    "src/headers/secure.ts"
+  ],
+  "next_recommended": [],
+  "risks": [],
+  "skill_resolution": [
+    {
+      "name": "context7-mcp",
+      "scope": "user",
+      "path": "/home/nxo/.claude/skills/context7-mcp/SKILL.md"
+    },
+    {
+      "name": "git-commits",
+      "scope": "user",
+      "path": "/home/nxo/.claude/skills/git-commits/SKILL.md"
+    },
+    {
+      "name": "paper-discovery",
+      "scope": "user",
+      "path": "/home/nxo/.claude/skills/paper-discovery/SKILL.md"
+    },
+    {
+      "name": "paper-pipeline",
+      "scope": "user",
+      "path": "/home/nxo/.claude/skills/paper-pipeline/SKILL.md"
+    },
+    {
+      "name": "paper-researcher",
+      "scope": "user",
+      "path": "/home/nxo/.claude/skills/paper-researcher/SKILL.md"
+    },
+    {
+      "name": "paper-reviewer",
+      "scope": "user",
+      "path": "/home/nxo/.claude/skills/paper-reviewer/SKILL.md"
+    },
+    {
+      "name": "quality-harness",
+      "scope": "project",
+      "path": "/home/nxo/wrkspc/ts-sentinel/.claude/skills/quality-harness/SKILL.md"
+    },
+    {
+      "name": "session-summary",
+      "scope": "project",
+      "path": "/home/nxo/wrkspc/ts-sentinel/.claude/skills/session-summary/SKILL.md"
+    }
+  ]
+}

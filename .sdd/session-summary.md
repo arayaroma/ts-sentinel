@@ -2,6 +2,13 @@
 
 Most recent change first. Read this before re-deriving project state from scratch.
 
+## add-referrer-permissions-policy — 2026-07-26T05:49:55.631Z — completed
+
+Added Referrer-Policy/Permissions-Policy to secureHeaders
+
+**Artifacts:** `src/headers/secure.ts`
+
+---
 ## port-go-sentinel-to-ts — 2026-07-26T05:45:20.794Z — completed
 
 Full TS port of go-sentinel's middleware set (Fetch API standard), new repo arayaroma/ts-sentinel, 33/33 tests
