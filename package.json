@@ -1,0 +1,34 @@
+{
+  "name": "ts-sentinel",
+  "version": "0.1.0",
+  "description": "Standalone, dependency-free (Fetch API only) TypeScript security middleware: API key auth, rate limiting, resource bounds, secure headers, input validation.",
+  "type": "module",
+  "main": "./dist/sentinel/index.js",
+  "types": "./dist/sentinel/index.d.ts",
+  "exports": {
+    ".": "./dist/sentinel/index.js",
+    "./auth": "./dist/auth/index.js",
+    "./ratelimit": "./dist/ratelimit/index.js",
+    "./resource": "./dist/resource/index.js",
+    "./headers": "./dist/headers/index.js",
+    "./validate": "./dist/validate/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arayaroma/ts-sentinel.git"
+  },
+  "devDependencies": {
+    "dar-ai": "file:../dar-ai/dar-ai-0.1.3.tgz",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.4"
+  }
+}
