@@ -2,6 +2,13 @@
 
 Most recent change first. Read this before re-deriving project state from scratch.
 
+## fix-bodylimit-stream-lock — 2026-07-26T06:04:17.353Z — completed
+
+Fixed maxBodyBytes locking the body stream unnecessarily for Content-Length-verified requests
+
+**Artifacts:** `src/resource/bodylimit.ts`
+
+---
 ## add-referrer-permissions-policy — 2026-07-26T05:49:55.631Z — completed
 
 Added Referrer-Policy/Permissions-Policy to secureHeaders

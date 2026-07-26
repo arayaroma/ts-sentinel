@@ -1,6 +1,6 @@
 {
   "name": "ts-sentinel",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Standalone, dependency-free (Fetch API only) TypeScript security middleware: API key auth, rate limiting, resource bounds, secure headers, input validation.",
   "type": "module",
   "main": "./dist/sentinel/index.js",
