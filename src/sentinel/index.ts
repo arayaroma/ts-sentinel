@@ -6,6 +6,9 @@
 export { chain } from "./chain.js";
 export type { Handler, Middleware } from "../types.js";
 
+export { traceId } from "../traceid/index.js";
+export type { TraceIdConfig } from "../traceid/index.js";
+
 export { requireApiKey } from "../auth/index.js";
 export type { ApiKeyConfig } from "../auth/index.js";
 

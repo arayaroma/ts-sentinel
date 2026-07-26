@@ -19,6 +19,7 @@ npm install ts-sentinel
 
 | Module | Middleware / helper | Purpose |
 |---|---|---|
+| `traceid` | `traceId` | Request-correlation ID, propagated across the middleware chain and echoed on the response. |
 | `auth` | `requireApiKey` | Constant-time API key check, multi-key rotation. OWASP A07. |
 | `ratelimit` | `rateLimit`, `rateLimitGlobal` | Token-bucket rate limiting — per-key/IP (`rateLimit`) and a single shared aggregate cap independent of caller identity (`rateLimitGlobal`). |
 | `resource` | `withTimeout`, `maxBodyBytes` | Per-request timeout and body-size cap. |
@@ -43,6 +44,7 @@ in this module's own test suite.
 ```ts
 import {
   chain,
+  traceId,
   secureHeaders,
   withTimeout,
   maxBodyBytes,
@@ -56,6 +58,7 @@ const apiKey = "replace-with-your-secret"; // load from env/secret manager in pr
 const app = async (req: Request): Promise<Response> => new Response("ok");
 
 const handler = chain(
+  traceId(),
   secureHeaders(),
   withTimeout(5000),
   maxBodyBytes(1 << 20), // 1MB
@@ -71,8 +74,10 @@ const handler = chain(
 // export default { fetch: handler };
 ```
 
-`chain` applies middleware in the order listed: `secureHeaders` runs first
-(outermost), `requireApiKey` runs last (closest to your handler).
+`chain` applies middleware in the order listed: `traceId` runs first
+(outermost) so the ID it generates/preserves lands on every response —
+including short-circuited 429/401s from `rateLimit`/`requireApiKey` further
+down the chain — `requireApiKey` runs last (closest to your handler).
 
 ### Rate limit chain ordering: global before per-key
 

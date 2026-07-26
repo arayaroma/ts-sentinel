@@ -7,6 +7,7 @@
   "types": "./dist/sentinel/index.d.ts",
   "exports": {
     ".": "./dist/sentinel/index.js",
+    "./traceid": "./dist/traceid/index.js",
     "./auth": "./dist/auth/index.js",
     "./ratelimit": "./dist/ratelimit/index.js",
     "./resource": "./dist/resource/index.js",

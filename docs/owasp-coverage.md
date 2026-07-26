@@ -14,7 +14,7 @@ scope. Mirrors go-sentinel's coverage doc, TS naming.
 | A06 | Vulnerable and Outdated Components | Out of scope for v1's runtime, but structurally addressed: ts-sentinel has zero runtime dependencies (Fetch API only), so it never introduces third-party CVEs into a consuming service. Caller responsibility to keep their own dependencies patched (`npm audit`). |
 | A07 | Identification and Authentication Failures | `requireApiKey` — constant-time key comparison (timing-attack resistant), fails closed on missing/invalid keys, supports multi-key rotation. |
 | A08 | Software and Data Integrity Failures | Out of scope for v1 — no deserialization or CI/CD supply-chain surface inside this module. |
-| A09 | Security Logging and Monitoring Failures | Out of scope for v1 — no logging middleware shipped yet. Caller responsibility: log rejections (401/429/413) from ts-sentinel's middleware, which each fail with a distinct, greppable JSON error body. |
+| A09 | Security Logging and Monitoring Failures | Partially addressed: `traceId` isn't a mitigation by itself (no logging middleware shipped yet), but it propagates a request-correlation ID across the whole middleware chain and echoes it on the response — including short-circuited 401/429/413s — so caller-side logs for a single request can be correlated end to end. Caller responsibility: actually log rejections, keyed by this ID. |
 | A10 | Server-Side Request Forgery (SSRF) | Out of scope — ts-sentinel never makes outbound requests on the application's behalf. Caller responsibility for any outbound HTTP calls the service itself makes. |
 
 ## Notes
