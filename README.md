@@ -20,6 +20,7 @@ npm install ts-sentinel
 | Module | Middleware / helper | Purpose |
 |---|---|---|
 | `traceid` | `traceId` | Request-correlation ID, propagated across the middleware chain and echoed on the response. |
+| `auditlog` | `auditLog` | Structured, tamper-evident who/what/when/how audit trail per request, emitted to a pluggable `sink`. OWASP A09. |
 | `auth` | `requireApiKey` | Constant-time API key check, multi-key rotation. OWASP A07. |
 | `ratelimit` | `rateLimit`, `rateLimitGlobal` | Token-bucket rate limiting — per-key/IP (`rateLimit`) and a single shared aggregate cap independent of caller identity (`rateLimitGlobal`). |
 | `resource` | `withTimeout`, `maxBodyBytes` | Per-request timeout and body-size cap. |
@@ -45,6 +46,7 @@ in this module's own test suite.
 import {
   chain,
   traceId,
+  auditLog,
   secureHeaders,
   withTimeout,
   maxBodyBytes,
@@ -59,6 +61,7 @@ const app = async (req: Request): Promise<Response> => new Response("ok");
 
 const handler = chain(
   traceId(),
+  auditLog({ sink: async (entry) => console.log(JSON.stringify(entry)) }),
   secureHeaders(),
   withTimeout(5000),
   maxBodyBytes(1 << 20), // 1MB
@@ -78,6 +81,41 @@ const handler = chain(
 (outermost) so the ID it generates/preserves lands on every response —
 including short-circuited 429/401s from `rateLimit`/`requireApiKey` further
 down the chain — `requireApiKey` runs last (closest to your handler).
+
+`auditLog` is listed right after `traceId` for two reasons: it needs the
+trace ID `traceId` set on the request/response to correlate its own entry,
+and — being response-only (it runs the rest of the chain first, then builds
+the entry from the final response) — placing it early in the list means it
+still observes the *final* outcome of everything below it: a 429 from
+`rateLimit`, a 401 from `requireApiKey`, or a 200 from your handler are all
+captured, rather than the audit trail silently missing whichever middleware
+short-circuited the request.
+
+### What `auditLog` deliberately does not do
+
+- **No persistence.** `auditLog` never writes to disk, a database, or a
+  remote log service itself — it hands a structured `AuditLogEntry` to the
+  `sink` you supply, and you wire that to console/file/remote storage. This
+  keeps ts-sentinel dependency-free and lets you reuse whatever logging
+  infrastructure you already have.
+- **No Merkle-tree checkpoints.** Tamper-evidence in v1 is a linear
+  Schneier-Kelsey hash chain (`tamperEvident: true` — each entry's
+  `entry_hash` folds in the previous entry's hash), which is enough to
+  detect any modification or reordering of a single instance's log stream.
+  Merkle-tree checkpointing (as used by Certificate Transparency, for
+  independently-verifiable audit proofs across many logs) is a higher-
+  assurance mechanism deferred until a real consumer need emerges. Note
+  also that the hash chain is module-scope, per-process state: a restart
+  starts a fresh chain from an empty `prev_hash`, which is a detectable,
+  honest boundary rather than a bug.
+- **No retention enforcement.** `auditLog` emits entries; how long they're
+  kept, when they're purged, and how access to them is controlled is the
+  sink/storage layer's responsibility, not this module's.
+
+This design follows research on audit-log design covering NIST SP 800-92,
+the OWASP Logging Vocabulary Cheat Sheet, PCI-DSS Req.10, Schneier-Kelsey
+hash-chaining, and GDPR IP-retention guidance (informing the `truncated`
+default for `ipMode`).
 
 ### Rate limit chain ordering: global before per-key
 

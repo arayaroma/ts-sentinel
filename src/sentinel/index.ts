@@ -9,6 +9,15 @@ export type { Handler, Middleware } from "../types.js";
 export { traceId } from "../traceid/index.js";
 export type { TraceIdConfig } from "../traceid/index.js";
 
+export { auditLog } from "../auditlog/index.js";
+export type {
+  ActorType,
+  Actor,
+  AuditLogEntry,
+  IpMode,
+  AuditLogConfig,
+} from "../auditlog/index.js";
+
 export { requireApiKey } from "../auth/index.js";
 export type { ApiKeyConfig } from "../auth/index.js";
 
